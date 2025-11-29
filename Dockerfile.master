@@ -1,0 +1,20 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip ansible sshpass openssh-client ca-certificates wget gnupg lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create SSH keys
+RUN mkdir -p /root/.ssh && ssh-keygen -t rsa -q -N "" -f /root/.ssh/id_rsa
+
+# Add a minimal ansible.cfg (inventory will be provided via /etc/ansible/hosts)
+RUN mkdir -p /etc/ansible
+COPY ansible.cfg /etc/ansible/ansible.cfg
+COPY hosts /etc/ansible/hosts
+
+WORKDIR /ansible
+
+# keep container interactive
+CMD ["/bin/bash"]

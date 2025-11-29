@@ -1,0 +1,19 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 openssh-server sudo ca-certificates && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /var/run/sshd
+
+# Create user 'ansible' with password 'ansible' and nopass sudo
+RUN useradd -m -s /bin/bash ansible \
+    && echo "ansible:ansible" | chpasswd \
+    && echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Allow password authentication for initial key-copy (can be tightened later)
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd","-D"]

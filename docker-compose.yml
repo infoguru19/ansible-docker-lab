@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  ansible-master:
+    build:
+      context: .
+      dockerfile: Dockerfile.master
+    container_name: ansible-master
+    depends_on:
+      - node1
+      - node2
+      - node3
+    networks:
+      - ansible-net
+    tty: true
+
+  node1:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: node1
+    networks:
+      - ansible-net
+
+  node2:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: node2
+    networks:
+      - ansible-net
+
+  node3:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: node3
+    networks:
+      - ansible-net
+
+networks:
+  ansible-net:
+    driver: bridge

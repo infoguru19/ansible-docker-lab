@@ -1,0 +1,8 @@
+- name: Test playbook for all nodes
+  hosts: node_servers
+  become: yes
+  tasks:
+    - name: Create /tmp/hello_from_ansible.txt
+      file:
+        path: /tmp/hello_from_ansible.txt
+        state: touch
