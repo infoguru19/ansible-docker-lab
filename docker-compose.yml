@@ -16,7 +16,7 @@ services:
     volumes:
       - master_ansible:/etc/ansible
       - master_ssh:/root/.ssh
-      - master_ansible_root:/root/ansible   # <-- added
+      - master_ansible_tmp:/tmp   # <-- added
 
   node1:
     build:
@@ -61,7 +61,7 @@ networks:
 volumes:
   master_ansible:
   master_ssh:
-  master_ansible_root:   # <-- added volume
+  master_ansible_tmp:   # <-- added volume
 
   node1_ssh:
   node1_sshd:
