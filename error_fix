@@ -1,0 +1,28 @@
+ERRO:
+======================================
+ansible all -m ping
+node2 | FAILED! => {
+    "msg": "Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support this.  Please add this host's fingerprint to your known_hosts file to manage this host."
+}
+node1 | FAILED! => {
+    "msg": "Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support this.  Please add this host's fingerprint to your known_hosts file to manage this host."
+}
+node3 | FAILED! => {
+    "msg": "Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support this.  Please add this host's fingerprint to your known_hosts file to manage this host."
+}
+
+
+FIXED: Run from master node
+=======================================
+root@9835d5370dc9:/# for n in node1 node2 node3; do
+  sshpass -p ansible ssh -o StrictHostKeyChecking=no ansible@$n "mkdir -p ~/.ssh"
+  sshpass -p ansible scp /root/.ssh/id_rsa.pub ansible@$n:/home/ansible/.ssh/authorized_keys
+  sshpass -p ansible ssh ansible@$n "chmod 600 ~/.ssh/authorized_keys && chmod 700 ~/.ssh"
+done
+
+OUTPUT
+-------------------------------------------------------------------------------
+Warning: Permanently added 'node1' (ED25519) to the list of known hosts.
+Warning: Permanently added 'node2' (ED25519) to the list of known hosts.
+Warning: Permanently added 'node3' (ED25519) to the list of known hosts.
+root@9835d5370dc9:/#
